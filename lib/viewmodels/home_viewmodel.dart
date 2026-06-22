@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import '../services/backend_service.dart';
+
 
 class HomeViewModel extends ChangeNotifier {
   bool _isReady = true;
@@ -9,9 +11,16 @@ class HomeViewModel extends ChangeNotifier {
   String get statusText => _statusText;
   String get statusSubtitle => _statusSubtitle;
 
-  void startWalk() {
-    // In real app: initialize camera, microphone, AI pipeline
-    debugPrint('HomeViewModel: Starting walk mode');
+  Future<void> startWalk() async {
+    _statusText = 'CONNECTING';
+    _statusSubtitle = 'Initializing AI navigation pipeline...';
+    notifyListeners();
+    
+    // Trigger session creation on backend
+    final sessionId = await BackendService.instance.startWalkSession('default_user_123');
+    if (sessionId != null) {
+      debugPrint('HomeViewModel: Active session started: $sessionId');
+    }
   }
 
   void activateSpeakMode() {

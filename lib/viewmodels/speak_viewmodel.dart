@@ -1,14 +1,16 @@
 import 'package:flutter/foundation.dart';
 import '../models/models.dart';
+import '../services/backend_service.dart';
 
 class SpeakViewModel extends ChangeNotifier {
   bool _isListening = false;
   String _statusText = 'Listening...';
-  final String _statusSubtitle = 'Ask anything about your surroundings';
+  String _statusSubtitle = 'Ask anything about your surroundings';
 
   final List<VoiceSuggestion> _suggestions = const [
     VoiceSuggestion(query: 'Nearby cafes?', iconType: 'food'),
     VoiceSuggestion(query: 'Any obstacles ahead?', iconType: 'warning'),
+    VoiceSuggestion(query: 'What\'s around me?', iconType: 'direction'),
   ];
 
   bool get isListening => _isListening;
@@ -28,16 +30,31 @@ class SpeakViewModel extends ChangeNotifier {
   void startListening() {
     _isListening = true;
     _statusText = 'Listening...';
+    _statusSubtitle = 'Speak now';
     notifyListeners();
   }
 
-  void stopListening() {
+  Future<void> stopListening() async {
     _isListening = false;
-    _statusText = 'Tap to speak';
+    _statusText = 'Thinking...';
     notifyListeners();
+    await askQuery('What is around me?');
   }
 
   void onSuggestionTap(VoiceSuggestion suggestion) {
     debugPrint('SpeakViewModel: Suggestion tapped — ${suggestion.query}');
+    askQuery(suggestion.query);
+  }
+
+  Future<void> askQuery(String query) async {
+    _isListening = false;
+    _statusText = 'Thinking...';
+    _statusSubtitle = 'Querying Saath Chalo AI...';
+    notifyListeners();
+
+    final response = await BackendService.instance.askAI(query, 'default_user_123');
+    _statusText = 'AI RESPONSE';
+    _statusSubtitle = response;
+    notifyListeners();
   }
 }

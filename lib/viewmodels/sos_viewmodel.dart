@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../models/models.dart';
+import '../services/backend_service.dart';
 
 class SOSViewModel extends ChangeNotifier {
   bool _isSOSActive = false;
@@ -26,20 +27,25 @@ class SOSViewModel extends ChangeNotifier {
     }
   }
 
-  void triggerSOS() {
+  Future<void> triggerSOS() async {
     _isSOSActive = true;
     notifyListeners();
-    debugPrint('SOSViewModel: SOS triggered — alerting contacts');
+    debugPrint('SOSViewModel: SOS triggered — alerting contacts via backend');
+    
+    // Call backend API (Mock lat/lng for simulation)
+    await BackendService.instance.triggerSOS('default_user_123', 12.9716, 77.5946);
   }
 
   void callPrimaryContact() {
     debugPrint('SOSViewModel: Calling ${primaryContact?.name}');
   }
 
-  void shareLocation() {
+  Future<void> shareLocation() async {
     _isLocationSharing = true;
     notifyListeners();
-    debugPrint('SOSViewModel: Sharing live location');
+    debugPrint('SOSViewModel: Sharing live location via backend');
+    
+    await BackendService.instance.shareLocation('default_user_123', 12.9716, 77.5946);
   }
 
   void cancelSOS() {
