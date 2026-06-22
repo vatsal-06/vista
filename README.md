@@ -4,7 +4,7 @@ Welcome to the **Saath Chalo** integration repository. This document outlines th
 
 ---
 
-## 🚀 Running the Backend Locally
+##  Running the Backend Locally
 
 1. **Install Python 3.11+**
 2. **Install Dependencies**:
@@ -19,7 +19,7 @@ Welcome to the **Saath Chalo** integration repository. This document outlines th
 
 ---
 
-## 📡 REST API Reference
+##  REST API Reference
 
 All REST endpoints are prefixed with `/api`.
 
@@ -271,7 +271,7 @@ All REST endpoints are prefixed with `/api`.
 
 ---
 
-## ⚡ WebSocket Real-Time Channel
+## WebSocket Real-Time Channel
 
 * **Endpoint**: `ws://<host>:<port>/ws/{session_id}`
 * **Protocol Flow**: Keep the connection alive as long as "Active Walk Screen" is mounted.
@@ -314,7 +314,7 @@ Whenever hazards are detected or cleared, the backend pushes warnings:
 
 ---
 
-## 🛡️ Production Level Integration Requirements
+##  Production Level Integration Requirements
 
 For a release-ready production app, follow these architectural constraints:
 
@@ -343,7 +343,7 @@ For a release-ready production app, follow these architectural constraints:
 
 ---
 
-## 🛠️ Current Development Mode (Hardcoded & Simulation Fallbacks)
+##  Current Development Mode (Hardcoded & Simulation Fallbacks)
 
 To allow offline testing and rapid frontend prototyping, the backend runs in a fully functional **Simulation Mode** if third-party credentials or hardware dependencies are missing:
 
@@ -358,7 +358,7 @@ To allow offline testing and rapid frontend prototyping, the backend runs in a f
 
 ---
 
-## 🗺️ Project Blueprint & Remaining Milestones
+##  Project Blueprint & Remaining Milestones
 
 ### Phase 2: Audio & Navigation Tuning (High Priority)
 * [ ] **Local Inference Weight Optimization**: Enable mobile-optimized TF Lite / ONNX runtimes for YOLOv8 and YAMNet to eliminate external latency.
@@ -375,7 +375,7 @@ To allow offline testing and rapid frontend prototyping, the backend runs in a f
 
 ---
 
-## 🤝 Code of Conduct
+##  Code of Conduct
 
 We are committed to providing a welcoming, safe, and collaborative environment. All contributors and maintainers are expected to adhere to the following values:
 
@@ -386,7 +386,7 @@ We are committed to providing a welcoming, safe, and collaborative environment. 
 
 ---
 
-## 📝 Contributing Guidelines
+##  Contributing Guidelines
 
 1. **Feature Branches**: Never commit directly to `main`. Create descriptive branch names, e.g., `feat/vision-yolo` or `fix/sos-phone-format`.
 2. **Strict Type Safety**: All Python code must include typing hints. All Dart viewmodels must use explicit models and handle API request exceptions gracefully.
