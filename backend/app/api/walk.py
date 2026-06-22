@@ -62,7 +62,7 @@ async def stop_walk(payload: WalkStopRequest, db=Depends(get_db)):
     }
     
     try:
-        db.table("walk_sessions").table("walk_sessions").update(update_data).eq("id", payload.session_id).execute()
+        db.table("walk_sessions").update(update_data).eq("id", payload.session_id).execute()
     except Exception as e:
         logger.error(f"Failed to write end-session log: {e}")
         

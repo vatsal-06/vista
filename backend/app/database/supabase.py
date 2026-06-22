@@ -45,6 +45,13 @@ class MockSupabaseClient:
             # In a simplified mock, select returns everything. We can filter if needed.
             return self
 
+        def update(self, data: Any):
+            # Update key-value pairs of matched data elements
+            for item in self.data:
+                item.update(data)
+            self._current_result = self.data
+            return self
+
         def eq(self, column: str, value: Any):
             self.data = [item for item in self.data if item.get(column) == value]
             return self
