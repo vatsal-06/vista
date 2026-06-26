@@ -45,8 +45,31 @@ class _ActiveWalkContent extends StatelessWidget {
             children: [
               const SizedBox(height: 16),
 
+              _VisualCuePanel(
+                title: vm.currentAlert != null ? 'VISUAL CUE' : 'GUIDANCE READY',
+                message: vm.currentAlert != null
+                    ? _cueMessageForAlert(vm.currentAlert!, vm.currentDirection)
+                    : 'The app is ready to guide the walk. When a hazard appears, the arrows and cue box will point to the safest direction.',
+                accentColor: vm.currentAlert != null ? AppColors.warning : AppColors.primary,
+                icon: vm.currentAlert != null ? Icons.campaign_rounded : Icons.visibility_rounded,
+              ),
+
+              const SizedBox(height: 12),
+
               // ── Direction Arrow + Stay Centered ──────────────────
-              _DirectionIndicator(instruction: vm.stayInstruction),
+              _DirectionIndicator(
+                instruction: vm.stayInstruction,
+                direction: vm.currentDirection,
+              ),
+
+              const SizedBox(height: 12),
+
+              _WalkSyncCard(
+                sessionId: vm.sessionId,
+                serverDistance: vm.serverDistanceWalked,
+                serverHazards: vm.serverHazardsLogged,
+                onRefresh: vm.refreshWalkStatus,
+              ),
 
               const SizedBox(height: 24),
 
@@ -85,6 +108,144 @@ class _ActiveWalkContent extends StatelessWidget {
   }
 }
 
+String _cueMessageForAlert(dynamic alert, String direction) {
+  final title = (alert.title as String).replaceAll('\n', ' ');
+  final readableDirection = switch (direction) {
+    'left' => 'left',
+    'right' => 'right',
+    _ => 'straight ahead',
+  };
+  final distance = alert.distance != null ? ' ${alert.distance} away.' : '.';
+  return '$title is $readableDirection${distance} Follow the arrows on screen.';
+}
+
+class _VisualCuePanel extends StatelessWidget {
+  final String title;
+  final String message;
+  final Color accentColor;
+  final IconData icon;
+
+  const _VisualCuePanel({
+    required this.title,
+    required this.message,
+    required this.accentColor,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: accentColor.withOpacity(0.25), width: 1.4),
+        boxShadow: [
+          BoxShadow(
+            color: accentColor.withOpacity(0.08),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: accentColor.withOpacity(0.14),
+            ),
+            child: Icon(icon, color: accentColor, size: 22),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800,
+                    color: accentColor,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  message,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textPrimary,
+                    height: 1.4,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _WalkSyncCard extends StatelessWidget {
+  final String? sessionId;
+  final double serverDistance;
+  final int serverHazards;
+  final VoidCallback onRefresh;
+
+  const _WalkSyncCard({
+    required this.sessionId,
+    required this.serverDistance,
+    required this.serverHazards,
+    required this.onRefresh,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final id = sessionId ?? 'pending';
+    final shortId = id.length > 10 ? id.substring(0, 10) : id;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.divider),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.sync_alt_rounded, color: AppColors.primary, size: 20),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              'Session $shortId • ${serverDistance.toStringAsFixed(2)} km • $serverHazards hazards',
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ),
+          IconButton(
+            onPressed: onRefresh,
+            icon: const Icon(Icons.refresh_rounded, color: AppColors.textPrimary, size: 20),
+            constraints: const BoxConstraints(),
+            padding: EdgeInsets.zero,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 // ── Active Mode Badge ──────────────────────────────────────────────────────────
 class _ActiveModeBadge extends StatelessWidget {
   @override
@@ -118,37 +279,75 @@ class _ActiveModeBadge extends StatelessWidget {
 // ── Direction Indicator ────────────────────────────────────────────────────────
 class _DirectionIndicator extends StatelessWidget {
   final String instruction;
-  const _DirectionIndicator({required this.instruction});
+  final String direction;
+
+  const _DirectionIndicator({
+    required this.instruction,
+    required this.direction,
+  });
+
+  IconData _arrowIconForDirection() {
+    switch (direction) {
+      case 'left':
+        return Icons.arrow_back_rounded;
+      case 'right':
+        return Icons.arrow_forward_rounded;
+      default:
+        return Icons.arrow_upward_rounded;
+    }
+  }
+
+  double _centerArrowRotation() {
+    switch (direction) {
+      case 'left':
+        return -1.5708;
+      case 'right':
+        return 1.5708;
+      default:
+        return 0.0;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final arrowIcon = _arrowIconForDirection();
+    final rotation = _centerArrowRotation();
+
     return Column(
       children: [
-        // Arrow cluster
         SizedBox(
-          height: 70,
+          height: 76,
           child: Stack(
             alignment: Alignment.center,
             children: [
-              // Left diagonal arrow
               Positioned(
                 left: MediaQuery.of(context).size.width * 0.27,
                 child: Transform.rotate(
-                  angle: -0.4,
-                  child: const Icon(Icons.arrow_upward_rounded,
-                      color: AppColors.primary, size: 32),
+                  angle: direction == 'right' ? 0.4 : -0.4,
+                  child: Icon(
+                    arrowIcon,
+                    color: AppColors.primary,
+                    size: 32,
+                  ),
                 ),
               ),
-              // Center main arrow
-              const Icon(Icons.arrow_upward_rounded,
-                  color: AppColors.primary, size: 48),
-              // Right diagonal arrow
+              Transform.rotate(
+                angle: rotation,
+                child: Icon(
+                  arrowIcon,
+                  color: AppColors.primary,
+                  size: 50,
+                ),
+              ),
               Positioned(
                 right: MediaQuery.of(context).size.width * 0.27,
                 child: Transform.rotate(
-                  angle: 0.4,
-                  child: const Icon(Icons.arrow_upward_rounded,
-                      color: AppColors.primary, size: 32),
+                  angle: direction == 'left' ? -0.4 : 0.4,
+                  child: Icon(
+                    arrowIcon,
+                    color: AppColors.primary,
+                    size: 32,
+                  ),
                 ),
               ),
             ],
@@ -172,6 +371,7 @@ class _DirectionIndicator extends StatelessWidget {
 // ── Alert Card ─────────────────────────────────────────────────────────────────
 class _AlertCard extends StatelessWidget {
   final dynamic alert;
+
   const _AlertCard({required this.alert});
 
   @override
@@ -186,19 +386,15 @@ class _AlertCard extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Warning triangle icon
           Container(
             padding: const EdgeInsets.all(4),
-            child: Icon(
+            child: const Icon(
               Icons.warning_amber_rounded,
               color: AppColors.warning,
               size: 60,
             ),
           ),
-
           const SizedBox(height: 20),
-
-          // Alert title — big bold text
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
@@ -212,10 +408,7 @@ class _AlertCard extends StatelessWidget {
               ),
             ),
           ),
-
           const SizedBox(height: 28),
-
-          // Distance badge
           if (alert.distance != null)
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),

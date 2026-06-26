@@ -31,9 +31,13 @@ class SOSViewModel extends ChangeNotifier {
     _isSOSActive = true;
     notifyListeners();
     debugPrint('SOSViewModel: SOS triggered — alerting contacts via backend');
-    
+
     // Call backend API (Mock lat/lng for simulation)
-    await BackendService.instance.triggerSOS('default_user_123', 12.9716, 77.5946);
+    await BackendService.instance.triggerSOS(
+      BackendService.instance.defaultUserId,
+      BackendService.instance.defaultLatitude,
+      BackendService.instance.defaultLongitude,
+    );
   }
 
   void callPrimaryContact() {
@@ -44,8 +48,12 @@ class SOSViewModel extends ChangeNotifier {
     _isLocationSharing = true;
     notifyListeners();
     debugPrint('SOSViewModel: Sharing live location via backend');
-    
-    await BackendService.instance.shareLocation('default_user_123', 12.9716, 77.5946);
+
+    await BackendService.instance.shareLocation(
+      BackendService.instance.defaultUserId,
+      BackendService.instance.defaultLatitude,
+      BackendService.instance.defaultLongitude,
+    );
   }
 
   void cancelSOS() {

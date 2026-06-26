@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../services/backend_service.dart';
 
-
 class HomeViewModel extends ChangeNotifier {
   bool _isReady = true;
   String _statusText = 'READY';
@@ -15,9 +14,11 @@ class HomeViewModel extends ChangeNotifier {
     _statusText = 'CONNECTING';
     _statusSubtitle = 'Initializing AI navigation pipeline...';
     notifyListeners();
-    
+
     // Trigger session creation on backend
-    final sessionId = await BackendService.instance.startWalkSession('default_user_123');
+    final sessionId = await BackendService.instance.startWalkSession(
+      BackendService.instance.defaultUserId,
+    );
     if (sessionId != null) {
       debugPrint('HomeViewModel: Active session started: $sessionId');
     }

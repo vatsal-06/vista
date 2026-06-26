@@ -100,6 +100,64 @@ class _SpeakModeContent extends StatelessWidget {
               ),
             ),
 
+            const SizedBox(height: 4),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: GestureDetector(
+                onTap: vm.isSceneScanLoading ? null : vm.runSceneScan,
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  decoration: BoxDecoration(
+                    color: AppColors.surface,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppColors.divider),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 38,
+                        height: 38,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.primaryPale.withOpacity(0.5),
+                        ),
+                        child: vm.isSceneScanLoading
+                            ? const Padding(
+                                padding: EdgeInsets.all(9),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: AppColors.primary,
+                                ),
+                              )
+                            : const Icon(
+                                Icons.photo_camera_back_rounded,
+                                color: AppColors.primary,
+                                size: 20,
+                              ),
+                      ),
+                      const SizedBox(width: 12),
+                      const Expanded(
+                        child: Text(
+                          'Run scene scan',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ),
+                      const Icon(
+                        Icons.chevron_right_rounded,
+                        color: AppColors.textSecondary,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
             const SizedBox(height: 16),
 
             // ── Audio waveform hint ──────────────────────────────
@@ -119,9 +177,13 @@ class _SpeakModeContent extends StatelessWidget {
                   context, AppRoutes.home, (r) => false);
               break;
             case 2:
-              break; // routes
+              Navigator.pushNamedAndRemoveUntil(
+                  context, AppRoutes.routes, (r) => false);
+              break;
             case 3:
-              break; // community
+              Navigator.pushNamedAndRemoveUntil(
+                  context, AppRoutes.community, (r) => false);
+              break;
           }
         },
         items: const [

@@ -33,6 +33,16 @@ class _HomeScreenContent extends StatelessWidget {
         title: const SaathChaloLogo(size: 26),
         actions: [
           IconButton(
+            icon: const Icon(Icons.map_rounded,
+                color: AppColors.textPrimary, size: 24),
+            onPressed: () => Navigator.pushNamed(context, AppRoutes.routes),
+          ),
+          IconButton(
+            icon: const Icon(Icons.people_rounded,
+                color: AppColors.textPrimary, size: 24),
+            onPressed: () => Navigator.pushNamed(context, AppRoutes.community),
+          ),
+          IconButton(
             icon: const Icon(Icons.settings_outlined,
                 color: AppColors.textPrimary, size: 26),
             onPressed: () => Navigator.pushNamed(context, AppRoutes.settings),

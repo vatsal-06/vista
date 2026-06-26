@@ -166,6 +166,12 @@ class _SettingsContent extends StatelessWidget {
           if (i == 0) {
             Navigator.pushNamedAndRemoveUntil(
                 context, AppRoutes.home, (r) => false);
+          } else if (i == 1) {
+            Navigator.pushNamedAndRemoveUntil(
+                context, AppRoutes.activeWalk, (r) => false);
+          } else if (i == 2) {
+            Navigator.pushNamedAndRemoveUntil(
+                context, AppRoutes.routes, (r) => false);
           }
         },
         items: const [

@@ -6,6 +6,8 @@ import 'views/screens/splash_screen.dart';
 import 'views/screens/home_screen.dart';
 import 'views/screens/active_walk_screen.dart';
 import 'views/screens/speak_mode_screen.dart';
+import 'views/screens/routes_screen.dart';
+import 'views/screens/community_screen.dart';
 import 'views/screens/sos_screen.dart';
 import 'views/screens/settings_screen.dart';
 
@@ -44,6 +46,8 @@ class SaathChaloApp extends StatelessWidget {
         AppRoutes.home: (context) => const HomeScreen(),
         AppRoutes.activeWalk: (context) => const ActiveWalkScreen(),
         AppRoutes.speakMode: (context) => const SpeakModeScreen(),
+        AppRoutes.routes: (context) => const RoutesScreen(),
+        AppRoutes.community: (context) => const CommunityScreen(),
         AppRoutes.sos: (context) => const SOSScreen(),
         AppRoutes.settings: (context) => const SettingsScreen(),
       },
@@ -54,6 +58,8 @@ class SaathChaloApp extends StatelessWidget {
           AppRoutes.home: (_) => const HomeScreen(),
           AppRoutes.activeWalk: (_) => const ActiveWalkScreen(),
           AppRoutes.speakMode: (_) => const SpeakModeScreen(),
+          AppRoutes.routes: (_) => const RoutesScreen(),
+          AppRoutes.community: (_) => const CommunityScreen(),
           AppRoutes.sos: (_) => const SOSScreen(),
           AppRoutes.settings: (_) => const SettingsScreen(),
         };
