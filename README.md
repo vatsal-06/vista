@@ -1,7 +1,5 @@
-# Saath Chalo - Frontend Developer Integration Guide
-
-Welcome to the **Saath Chalo** integration repository. This document outlines the API endpoints, real-time WebSocket communication protocols, and production guidelines for integrating the Flutter application with the FastAPI backend.
-
+## VISTA
+An AI-powered navigation assistant for visually impaired users, providing real-time obstacle detection, voice-guided navigation, and accessible indoor/outdoor mobility support.
 ---
 
 ## Running the Backend Locally
